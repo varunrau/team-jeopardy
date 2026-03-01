@@ -5,12 +5,12 @@
    --display: 2.5rem / 700
 */
 
-* { margin: 0; padding: 0; box-sizing: border-box; text-wrap: pretty; }
+* { margin: 0; padding: 0; box-sizing: border-box; text-wrap: pretty; text-transform: uppercase; }
 
 body {
-    font-family: 'Space Grotesk', sans-serif;
+    font-family: 'Sofia Sans Condensed', sans-serif;
     font-size: 1rem;
-    font-weight: 400;
+    font-weight: 600;
     background: #060CE9;
     color: #fff;
     min-height: 100vh;
@@ -25,33 +25,37 @@ button, input, select, textarea {
     display: flex;
     flex-direction: column;
     min-height: 100vh;
-    padding-bottom: 70px;
+    padding-bottom: 120px;
 }
 
-/* Scoreboard */
+/* Scoreboard (inside bottom bar) */
 #scoreboard {
     display: flex;
     justify-content: center;
     gap: 2rem;
-    padding: 1rem 2rem;
-    background: rgba(0, 0, 0, 0.3);
+    padding: 1rem 1rem;
     flex-wrap: wrap;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+}
+
+#scoreboard:empty {
+    display: none;
 }
 
 .score-card {
     text-align: center;
-    min-width: 120px;
+    min-width: 80px;
 }
 
 .score-name {
-    font-size: 1rem;
+    font-size: 1.5rem;
     font-weight: 700;
-    margin-bottom: 0.25rem;
+    margin-bottom: 0.15rem;
 }
 
 .score-value {
     font-size: 1.5rem;
-    font-weight: 700;
+    font-weight: 600;
     color: #FFD700;
 }
 
@@ -62,9 +66,9 @@ button, input, select, textarea {
 /* Board Grid */
 #board {
     flex: 1;
-    padding: 1rem;
+    padding: 48px 1rem 1rem;
     display: flex;
-    align-items: center;
+    align-items: flex-start;
     justify-content: center;
 }
 
@@ -76,8 +80,8 @@ button, input, select, textarea {
 
 .category-header {
     background: #060CE9;
-    color: #FFD700;
-    font-size: 1.5rem;
+    color: #fff;
+    font-size: 2rem;
     font-weight: 700;
     text-align: center;
     text-transform: uppercase;
@@ -93,7 +97,7 @@ button, input, select, textarea {
     background: #060CE9;
     border: 2px solid #1a1aff;
     color: #FFD700;
-    font-size: 1.5rem;
+    font-size: 3rem;
     font-weight: 700;
     text-align: center;
     padding: 1.5rem 0.5rem;
@@ -147,7 +151,7 @@ button, input, select, textarea {
     display: flex;
     align-items: flex-start;
     justify-content: center;
-    padding-top: 48px;
+    padding-bottom: 48px;
     overflow-y: auto;
 }
 
@@ -157,30 +161,30 @@ button, input, select, textarea {
 
 .overlay-content {
     text-align: center;
-    max-width: 900px;
-    padding: 2rem;
+    max-width: 700px;
+    padding: 24px 0;
     width: 100%;
 }
 
 .clue-header {
-    font-size: 1rem;
+    font-size: 1.5rem;
     font-weight: 700;
     color: #FFD700;
-    margin-bottom: 2rem;
+    margin-bottom: 1rem;
     display: flex;
     justify-content: center;
     gap: 1.5rem;
 }
 
 .clue-text {
-    font-size: 1.5rem;
+    font-size: 2.4rem;
     font-weight: 700;
-    line-height: 1.4;
+    line-height: 1.2;
     margin-bottom: 2rem;
 }
 
 .answer-text {
-    font-size: 1.5rem;
+    font-size: 1.75rem;
     font-weight: 700;
     color: #00ff00;
     margin-bottom: 2rem;
@@ -285,13 +289,9 @@ button, input, select, textarea {
     color: #060CE9;
 }
 
-.btn-refresh {
-    background: #6c757d;
+.btn-blue {
+    background: #2563eb;
     color: #fff;
-}
-
-.btn-refresh:hover {
-    background: #5a6268;
 }
 
 /* Fixed Bottom Bar */
@@ -304,18 +304,31 @@ button, input, select, textarea {
     background: rgba(0, 0, 0, 0.5);
     backdrop-filter: blur(10px);
     -webkit-backdrop-filter: blur(10px);
-    padding: 1rem;
     display: flex;
-    justify-content: center;
-    gap: 1rem;
+    flex-direction: column;
 }
 
-#bottom-controls,
+#bottom-controls {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    gap: 1rem;
+    padding: 0.75rem 1rem;
+}
+
 #clue-controls,
 #final-controls {
     display: flex;
     justify-content: center;
     gap: 1rem;
+    padding: 0.75rem 1rem;
+}
+
+.bottom-left,
+.bottom-right {
+    display: flex;
+    gap: 0.5rem;
 }
 
 #bottom-controls.hidden,

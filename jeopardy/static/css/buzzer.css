@@ -5,12 +5,12 @@
    --display: 2.5rem / 700
 */
 
-* { margin: 0; padding: 0; box-sizing: border-box; text-wrap: pretty; }
+* { margin: 0; padding: 0; box-sizing: border-box; text-wrap: pretty; text-transform: uppercase; }
 
 body {
-    font-family: 'Space Grotesk', sans-serif;
+    font-family: 'Sofia Sans Condensed', sans-serif;
     font-size: 1rem;
-    font-weight: 400;
+    font-weight: 600;
     background: #1a1a2e;
     color: #fff;
     min-height: 100vh;

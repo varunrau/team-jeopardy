@@ -6,14 +6,11 @@
     <title>Jeopardy - Host Board</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Sofia+Sans+Condensed:wght@400;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="/static/css/board.css">
 </head>
 <body>
     <div id="app">
-        <!-- Scoreboard -->
-        <div id="scoreboard"></div>
-
         <!-- Game Board -->
         <div id="board"></div>
 
@@ -59,11 +56,17 @@
 
         <!-- Fixed bottom bar — always visible -->
         <div id="bottom-bar">
+            <!-- Scoreboard -->
+            <div id="scoreboard"></div>
             <!-- Default controls (board view) -->
             <div id="bottom-controls">
-                <button class="btn btn-skip" onclick="showTeamsModal()">See teams</button>
-                <button class="btn btn-refresh" onclick="refetchClues()">Refetch from Notion</button>
-                <button class="btn btn-final" onclick="startFinalJeopardy()">Final Jeopardy</button>
+                <div class="bottom-left">
+                    <button class="btn btn-blue" onclick="showTeamsModal()">See teams</button>
+                    <button class="btn btn-blue" onclick="refetchClues()">Refetch</button>
+                </div>
+                <div class="bottom-right">
+                    <button class="btn btn-final" onclick="startFinalJeopardy()">Final Jeopardy</button>
+                </div>
             </div>
             <!-- Clue controls (shown when a clue is active) -->
             <div id="clue-controls" class="hidden">
