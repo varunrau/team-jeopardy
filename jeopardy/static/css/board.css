@@ -1,11 +1,24 @@
+/* Typography: 4 styles only
+   --body:    1rem / 400
+   --label:   1rem / 700
+   --heading: 1.5rem / 700
+   --display: 2.5rem / 700
+*/
+
 * { margin: 0; padding: 0; box-sizing: border-box; }
 
 body {
-    font-family: 'Helvetica Neue', Arial, sans-serif;
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 1rem;
+    font-weight: 400;
     background: #060CE9;
     color: #fff;
     min-height: 100vh;
     overflow-x: hidden;
+}
+
+button, input, select, textarea {
+    font-family: inherit;
 }
 
 #app {
@@ -31,15 +44,13 @@ body {
 
 .score-name {
     font-size: 1rem;
-    font-weight: bold;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
+    font-weight: 700;
     margin-bottom: 0.25rem;
 }
 
 .score-value {
-    font-size: 1.4rem;
-    font-weight: bold;
+    font-size: 1.5rem;
+    font-weight: 700;
     color: #FFD700;
 }
 
@@ -67,11 +78,9 @@ body {
     background: #060CE9;
     color: #FFD700;
     font-size: 1rem;
-    font-weight: bold;
+    font-weight: 700;
     text-align: center;
     padding: 1rem 0.5rem;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
     border: 2px solid #1a1aff;
     min-height: 60px;
     display: flex;
@@ -83,8 +92,8 @@ body {
     background: #060CE9;
     border: 2px solid #1a1aff;
     color: #FFD700;
-    font-size: 1.8rem;
-    font-weight: bold;
+    font-size: 1.5rem;
+    font-weight: 700;
     text-align: center;
     padding: 1.5rem 0.5rem;
     cursor: pointer;
@@ -93,7 +102,6 @@ body {
     display: flex;
     align-items: center;
     justify-content: center;
-    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
 }
 
 .cell:hover {
@@ -119,7 +127,7 @@ body {
 
 .no-data {
     text-align: center;
-    font-size: 1.5rem;
+    font-size: 1rem;
     opacity: 0.5;
 }
 
@@ -149,10 +157,9 @@ body {
 }
 
 .clue-header {
-    font-size: 1.2rem;
+    font-size: 1rem;
+    font-weight: 700;
     color: #FFD700;
-    text-transform: uppercase;
-    letter-spacing: 0.1em;
     margin-bottom: 2rem;
     display: flex;
     justify-content: center;
@@ -160,14 +167,15 @@ body {
 }
 
 .clue-text {
-    font-size: 2.2rem;
+    font-size: 2.5rem;
+    font-weight: 700;
     line-height: 1.4;
     margin-bottom: 2rem;
-    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
 }
 
 .answer-text {
     font-size: 1.5rem;
+    font-weight: 700;
     color: #90EE90;
     margin-bottom: 2rem;
     font-style: italic;
@@ -182,8 +190,8 @@ body {
 
 /* Buzz Indicator */
 .buzz-indicator {
-    font-size: 1.8rem;
-    font-weight: bold;
+    font-size: 1.5rem;
+    font-weight: 700;
     color: #FFD700;
     margin-bottom: 2rem;
     animation: pulse 0.5s ease-in-out;
@@ -195,15 +203,13 @@ body {
 
 #buzz-team-name {
     color: #00ff00;
-    font-size: 2rem;
 }
 
 /* Daily Double */
 .daily-double {
-    font-size: 3rem;
-    font-weight: bold;
+    font-size: 2.5rem;
+    font-weight: 700;
     color: #FFD700;
-    text-shadow: 3px 3px 6px rgba(0, 0, 0, 0.5);
     animation: dailyDouble 0.8s ease-in-out;
     margin-bottom: 1.5rem;
 }
@@ -229,13 +235,11 @@ body {
 
 .btn {
     padding: 0.75rem 2rem;
-    font-size: 1.1rem;
-    font-weight: bold;
+    font-size: 1rem;
+    font-weight: 700;
     border: none;
     border-radius: 6px;
     cursor: pointer;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
     transition: transform 0.1s, opacity 0.15s;
 }
 
@@ -274,15 +278,11 @@ body {
 .btn-final {
     background: #FFD700;
     color: #060CE9;
-    font-size: 1.2rem;
-    padding: 0.75rem 2rem;
 }
 
 .btn-refresh {
     background: #6c757d;
     color: #fff;
-    font-size: 1rem;
-    padding: 0.75rem 1.5rem;
 }
 
 .btn-refresh:hover {
@@ -294,6 +294,9 @@ body {
     padding: 1rem;
     text-align: center;
     background: rgba(0, 0, 0, 0.2);
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
 }
 
 /* Final Jeopardy Results */
@@ -314,8 +317,8 @@ body {
 }
 
 .final-team-name {
-    font-size: 1.2rem;
-    font-weight: bold;
+    font-size: 1rem;
+    font-weight: 700;
     color: #FFD700;
     margin-bottom: 0.5rem;
 }
@@ -326,14 +329,14 @@ body {
 }
 
 .final-team-wager {
-    font-size: 0.9rem;
+    font-size: 1rem;
     opacity: 0.8;
     margin-bottom: 0.25rem;
 }
 
 .final-team-score {
-    font-size: 1.1rem;
-    font-weight: bold;
+    font-size: 1rem;
+    font-weight: 700;
     margin-bottom: 0.75rem;
 }
 
@@ -345,7 +348,6 @@ body {
 
 .final-judge-btns .btn {
     padding: 0.5rem 1rem;
-    font-size: 0.9rem;
 }
 
 /* Game Over */
@@ -355,9 +357,9 @@ body {
 }
 
 .game-over h1 {
-    font-size: 4rem;
+    font-size: 2.5rem;
+    font-weight: 700;
     color: #FFD700;
-    text-shadow: 3px 3px 6px rgba(0, 0, 0, 0.5);
 }
 
 /* Animations */

@@ -29,13 +29,16 @@ class NotionService:
                 if start_cursor:
                     kwargs["start_cursor"] = start_cursor
                 response = await self.client.data_sources.query(**kwargs)
-            for page in response["results"]:
-                try:
-                    clue = await self._parse_page(page)
-                    if clue:
-                        clues.append(clue)
-                except Exception:
-                    logger.exception("Failed to parse Notion page %s", page.get("id"))
+
+            # Parse all pages in this batch concurrently (semaphore limits to 3 in-flight)
+            tasks = [self._parse_page(page) for page in response["results"]]
+            results = await asyncio.gather(*tasks, return_exceptions=True)
+            for page, result in zip(response["results"], results):
+                if isinstance(result, Exception):
+                    logger.exception("Failed to parse Notion page %s", page.get("id"), exc_info=result)
+                elif result is not None:
+                    clues.append(result)
+
             has_more = response.get("has_more", False)
             start_cursor = response.get("next_cursor")
 

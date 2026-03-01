@@ -508,6 +508,25 @@ async def judge_final_answer(
     return {"team_id": team_id, "correct": body.correct, "new_score": new_score}
 
 
+@router.get("/games/{game_id}/team-state/{team_token}")
+async def get_team_state(
+    game_id: str,
+    team_token: str,
+    gm: GameManager = Depends(get_game_manager),
+):
+    """Get a team's current state for reconnection (FJ submission status)."""
+    game = gm.get_game(game_id)
+    if not game:
+        raise HTTPException(status_code=404, detail="Game not found")
+    team = gm.get_team_by_token(game_id, team_token)
+    if not team:
+        raise HTTPException(status_code=404, detail="Team not found")
+    return {
+        "final_wager": team.final_wager,
+        "has_final_answer": team.final_answer is not None,
+    }
+
+
 @router.post("/games/{game_id}/finish")
 async def finish_game(game_id: str, gm: GameManager = Depends(get_game_manager)):
     try:

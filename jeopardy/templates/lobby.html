@@ -4,25 +4,30 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Jeopardy - Lobby</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
-            font-family: 'Helvetica Neue', Arial, sans-serif;
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1rem;
+            font-weight: 400;
             background: #060CE9;
             color: #fff;
             min-height: 100vh;
             padding: 2rem;
         }
+        button, input { font-family: inherit; }
         h1 {
             text-align: center;
             font-size: 2.5rem;
-            text-transform: uppercase;
-            letter-spacing: 0.1em;
+            font-weight: 700;
             margin-bottom: 0.5rem;
         }
         .game-id {
             text-align: center;
-            font-size: 0.9rem;
+            font-size: 1rem;
             opacity: 0.6;
             margin-bottom: 2rem;
         }
@@ -31,7 +36,8 @@
             margin: 0 auto 2rem;
         }
         h2 {
-            font-size: 1.3rem;
+            font-size: 1.5rem;
+            font-weight: 700;
             margin-bottom: 1rem;
             color: #FFD700;
         }
@@ -43,7 +49,7 @@
         .add-team-form input {
             flex: 1;
             padding: 0.75rem 1rem;
-            font-size: 1.1rem;
+            font-size: 1rem;
             border: 2px solid #FFD700;
             border-radius: 6px;
             background: rgba(255,255,255,0.1);
@@ -54,8 +60,8 @@
         .add-team-form input:focus { background: rgba(255,255,255,0.2); }
         .add-team-form button {
             padding: 0.75rem 1.5rem;
-            font-size: 1.1rem;
-            font-weight: bold;
+            font-size: 1rem;
+            font-weight: 700;
             background: #FFD700;
             color: #060CE9;
             border: none;
@@ -76,8 +82,8 @@
             gap: 1.5rem;
         }
         .team-card .team-name {
-            font-size: 1.2rem;
-            font-weight: bold;
+            font-size: 1rem;
+            font-weight: 700;
             flex: 1;
         }
         .team-card img {
@@ -86,7 +92,7 @@
             border-radius: 4px;
         }
         .team-card .team-url {
-            font-size: 0.75rem;
+            font-size: 1rem;
             opacity: 0.6;
             word-break: break-all;
         }
@@ -94,21 +100,20 @@
             display: block;
             margin: 2rem auto;
             padding: 1rem 3rem;
-            font-size: 1.5rem;
-            font-weight: bold;
+            font-size: 1rem;
+            font-weight: 700;
             background: #28a745;
             color: #fff;
             border: none;
             border-radius: 8px;
             cursor: pointer;
-            text-transform: uppercase;
         }
         #start-btn:hover { background: #218838; }
         #start-btn:disabled { opacity: 0.4; cursor: not-allowed; }
         .status-msg {
             text-align: center;
             margin-top: 1rem;
-            font-size: 0.9rem;
+            font-size: 1rem;
             opacity: 0.7;
         }
     </style>

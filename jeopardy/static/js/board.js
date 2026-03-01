@@ -21,7 +21,7 @@ function connect() {
     ws = new WebSocket(`${protocol}//${location.host}/ws/host/${gameId}`);
     ws.onopen = () => {
         console.log("Host WebSocket connected");
-        fetchBoardState();
+        // Server sends sync events on connect, no need for REST fetch
     };
     ws.onmessage = (event) => {
         const data = JSON.parse(event.data);

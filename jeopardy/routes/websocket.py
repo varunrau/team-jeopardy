@@ -9,7 +9,6 @@ from jeopardy.models.events import (
     BuzzLocked,
     BuzzTimeout,
     BuzzWinner,
-    ScoreUpdate,
 )
 
 logger = logging.getLogger(__name__)
@@ -97,6 +96,15 @@ async def host_websocket(websocket: WebSocket, game_id: str) -> None:
         return
 
     await ws_manager.connect_host(game_id, websocket)
+
+    # Send full state sync on connect/reconnect
+    for event in gm.get_host_sync_events(game):
+        try:
+            await websocket.send_text(event.model_dump_json())
+        except Exception:
+            await ws_manager.disconnect_host(game_id, websocket)
+            return
+
     try:
         while True:
             # Host WS is primarily server -> client
@@ -128,12 +136,9 @@ async def team_websocket(websocket: WebSocket, game_id: str, team_token: str) ->
 
     await ws_manager.connect_team(game_id, team.team_id, websocket)
 
-    # Send current game state on connect
-    score_event = ScoreUpdate(
-        scores=gm.get_scores(game),
-        team_names=gm.get_team_names(game),
-    )
-    await ws_manager.send_to_team(game_id, team.team_id, score_event)
+    # Send full state sync on connect/reconnect
+    for event in gm.get_team_sync_events(game, team.team_id):
+        await ws_manager.send_to_team(game_id, team.team_id, event)
 
     try:
         while True:

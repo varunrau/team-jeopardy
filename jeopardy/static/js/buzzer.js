@@ -21,7 +21,7 @@ function connect() {
     ws = new WebSocket(`${protocol}//${location.host}/ws/team/${gameId}/${teamToken}`);
     ws.onopen = () => {
         console.log("Team WebSocket connected");
-        setStatus("Connected. Waiting for game...");
+        // Status will be set by sync events from server
     };
     ws.onmessage = (event) => {
         const data = JSON.parse(event.data);
@@ -168,13 +168,35 @@ function handleStatusChange(status) {
     }
 }
 // --- Final Jeopardy ---
-function showFinalJeopardy(data) {
+async function showFinalJeopardy(data) {
     hideClue();
     disableBuzz();
     hide("buzz-container");
     $("final-category").textContent = data.category;
     $("final-clue").textContent = data.clue_text;
     show("final-panel");
+    // Restore FJ form state on reconnect
+    try {
+        const resp = await fetch(`/api/games/${gameId}/team-state/${teamToken}`);
+        if (resp.ok) {
+            const state = await resp.json();
+            if (state.final_wager !== null) {
+                $("wager-input").value = state.final_wager;
+                $("wager-input").disabled = true;
+                $("wager-btn").disabled = true;
+                show("answer-form");
+                if (state.has_final_answer) {
+                    $("answer-input").disabled = true;
+                    $("answer-btn").disabled = true;
+                    setStatus("Answer submitted! Waiting for results...");
+                } else {
+                    setStatus("Wager submitted! Enter your answer.");
+                }
+            }
+        }
+    } catch (e) {
+        console.error("Failed to check team state:", e);
+    }
 }
 async function submitWager() {
     const input = $("wager-input");

@@ -1,7 +1,21 @@
 from typing import Optional
 
+from pydantic import BaseModel
+
 from jeopardy.config import settings
 from jeopardy.models.game import Clue, GameState, GameStatus, Team
+from jeopardy.models.events import (
+    AnswerReveal,
+    BoardUpdate,
+    BuzzLocked,
+    BuzzOpen,
+    BuzzWinner,
+    ClueSelected,
+    DailyDouble,
+    FinalJeopardyClue,
+    GameStatusChange,
+    ScoreUpdate,
+)
 from jeopardy.services.notion import NotionService
 
 
@@ -165,6 +179,101 @@ class GameManager:
                     entry["clue_text"] = clue.clue_text
                 board_data[category].append(entry)
         return board_data
+
+    def get_team_sync_events(self, game: GameState, team_id: str) -> list[BaseModel]:
+        """Build events to sync a reconnecting team client."""
+        events: list[BaseModel] = []
+
+        events.append(ScoreUpdate(
+            scores=self.get_scores(game),
+            team_names=self.get_team_names(game),
+        ))
+        events.append(GameStatusChange(status=game.status))
+
+        if game.status == GameStatus.IN_PROGRESS and game.current_clue:
+            clue = game.current_clue
+            events.append(ClueSelected(
+                clue_text=clue.clue_text,
+                clue_image_url=clue.clue_image_url,
+                category=clue.category,
+                dollar_value=clue.dollar_value,
+                is_daily_double=clue.is_daily_double,
+            ))
+            if clue.is_daily_double:
+                events.append(DailyDouble(
+                    team_id="",
+                    team_name="",
+                    category=clue.category,
+                    dollar_value=clue.dollar_value,
+                ))
+            elif game.buzz_window_open:
+                if team_id not in game.buzz_excluded_teams:
+                    events.append(BuzzOpen())
+            elif game.current_answering_team:
+                answering_team = game.teams.get(game.current_answering_team)
+                if answering_team:
+                    events.append(BuzzLocked(team_name=answering_team.name))
+
+        if game.status == GameStatus.FINAL_JEOPARDY:
+            fj_clue = self.get_final_jeopardy_clue(game.game_id)
+            if fj_clue:
+                events.append(FinalJeopardyClue(
+                    category=fj_clue.category,
+                    clue_text=fj_clue.clue_text,
+                ))
+
+        return events
+
+    def get_host_sync_events(self, game: GameState) -> list[BaseModel]:
+        """Build events to sync a reconnecting host client."""
+        events: list[BaseModel] = []
+
+        events.append(BoardUpdate(
+            board=self.get_board_data(game, include_answers=True),
+            scores=self.get_scores(game),
+            team_names=self.get_team_names(game),
+        ))
+
+        if game.status == GameStatus.FINISHED:
+            events.append(GameStatusChange(status=game.status))
+            return events
+
+        if game.status == GameStatus.IN_PROGRESS and game.current_clue:
+            clue = game.current_clue
+            events.append(ClueSelected(
+                clue_text=clue.clue_text,
+                clue_image_url=clue.clue_image_url,
+                category=clue.category,
+                dollar_value=clue.dollar_value,
+                is_daily_double=clue.is_daily_double,
+            ))
+            events.append(AnswerReveal(answer=clue.answer))
+            if clue.is_daily_double:
+                events.append(DailyDouble(
+                    team_id="",
+                    team_name="",
+                    category=clue.category,
+                    dollar_value=clue.dollar_value,
+                ))
+            if game.current_answering_team:
+                answering_team = game.teams.get(game.current_answering_team)
+                if answering_team:
+                    events.append(BuzzWinner(
+                        team_id=game.current_answering_team,
+                        team_name=answering_team.name,
+                    ))
+
+        if game.status == GameStatus.FINAL_JEOPARDY:
+            events.append(GameStatusChange(status=game.status))
+            fj_clue = self.get_final_jeopardy_clue(game.game_id)
+            if fj_clue:
+                events.append(FinalJeopardyClue(
+                    category=fj_clue.category,
+                    clue_text=fj_clue.clue_text,
+                ))
+                events.append(AnswerReveal(answer=fj_clue.answer))
+
+        return events
 
     def _build_board(self, clues: list[Clue]) -> dict[str, list[Clue]]:
         board: dict[str, list[Clue]] = {}

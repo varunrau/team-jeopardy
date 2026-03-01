@@ -4,10 +4,15 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Team Jeopardy</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
-            font-family: 'Helvetica Neue', Arial, sans-serif;
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1rem;
+            font-weight: 400;
             background: #060CE9;
             color: #fff;
             min-height: 100vh;
@@ -16,34 +21,30 @@
             align-items: center;
             justify-content: center;
         }
+        button { font-family: inherit; }
         h1 {
-            font-size: 4rem;
-            text-transform: uppercase;
-            letter-spacing: 0.15em;
-            text-shadow: 3px 3px 6px rgba(0,0,0,0.5);
+            font-size: 2.5rem;
+            font-weight: 700;
             margin-bottom: 2rem;
         }
         .subtitle {
-            font-size: 1.2rem;
+            font-size: 1rem;
             opacity: 0.8;
             margin-bottom: 3rem;
         }
         #create-btn {
             padding: 1rem 3rem;
-            font-size: 1.5rem;
-            font-weight: bold;
+            font-size: 1rem;
+            font-weight: 700;
             background: #FFD700;
             color: #060CE9;
             border: none;
             border-radius: 8px;
             cursor: pointer;
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-            transition: transform 0.15s, box-shadow 0.15s;
+            transition: transform 0.15s;
         }
         #create-btn:hover {
             transform: translateY(-2px);
-            box-shadow: 0 4px 20px rgba(255,215,0,0.4);
         }
         #create-btn:disabled {
             opacity: 0.5;
