@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jeopardy - Host Board</title>
+    <link rel="stylesheet" href="/static/css/board.css">
+</head>
+<body>
+    <div id="app">
+        <!-- Scoreboard -->
+        <div id="scoreboard"></div>
+
+        <!-- Game Board -->
+        <div id="board"></div>
+
+        <!-- Clue Overlay -->
+        <div id="clue-overlay" class="overlay hidden">
+            <div class="overlay-content">
+                <div class="clue-header">
+                    <span id="clue-category"></span>
+                    <span id="clue-value"></span>
+                </div>
+                <div id="clue-text" class="clue-text"></div>
+                <div id="answer-text" class="answer-text hidden"></div>
+                <div id="buzz-indicator" class="buzz-indicator hidden">
+                    <span id="buzz-team-name"></span> buzzed in!
+                </div>
+                <div id="daily-double-indicator" class="daily-double hidden">
+                    DAILY DOUBLE!
+                </div>
+                <div class="host-controls">
+                    <button id="btn-reveal" class="btn btn-info" onclick="revealAnswer()">Reveal Answer</button>
+                    <button id="btn-correct" class="btn btn-correct hidden" onclick="judgeAnswer(true)">Correct</button>
+                    <button id="btn-incorrect" class="btn btn-incorrect hidden" onclick="judgeAnswer(false)">Incorrect</button>
+                    <button id="btn-skip" class="btn btn-skip" onclick="skipClue()">Skip / No Answer</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Final Jeopardy Overlay -->
+        <div id="final-overlay" class="overlay hidden">
+            <div class="overlay-content">
+                <h2>Final Jeopardy</h2>
+                <div id="final-category" class="clue-header"></div>
+                <div id="final-clue-text" class="clue-text"></div>
+                <div id="final-answer-text" class="answer-text hidden"></div>
+                <div id="final-results"></div>
+                <div class="host-controls">
+                    <button class="btn btn-info" onclick="revealFinalAnswers()">Reveal Answers</button>
+                    <button class="btn btn-correct" onclick="finishGame()">Finish Game</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Bottom Controls -->
+        <div id="bottom-controls">
+            <button class="btn btn-refresh" onclick="refetchClues()">Refetch from Notion</button>
+            <button class="btn btn-final" onclick="startFinalJeopardy()">Final Jeopardy</button>
+        </div>
+    </div>
+
+    <script>
+        const gameId = "{{ game_id }}";
+    </script>
+    <script type="module" src="/static/js/board.js"></script>
+</body>
+</html>

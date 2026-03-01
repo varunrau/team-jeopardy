@@ -1,0 +1,368 @@
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+    font-family: 'Helvetica Neue', Arial, sans-serif;
+    background: #060CE9;
+    color: #fff;
+    min-height: 100vh;
+    overflow-x: hidden;
+}
+
+#app {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+/* Scoreboard */
+#scoreboard {
+    display: flex;
+    justify-content: center;
+    gap: 2rem;
+    padding: 1rem 2rem;
+    background: rgba(0, 0, 0, 0.3);
+    flex-wrap: wrap;
+}
+
+.score-card {
+    text-align: center;
+    min-width: 120px;
+}
+
+.score-name {
+    font-size: 1rem;
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: 0.25rem;
+}
+
+.score-value {
+    font-size: 1.4rem;
+    font-weight: bold;
+    color: #FFD700;
+}
+
+.score-value.negative {
+    color: #ff4444;
+}
+
+/* Board Grid */
+#board {
+    flex: 1;
+    padding: 1rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.board-grid {
+    display: grid;
+    gap: 6px;
+    width: 100%;
+    max-width: 1200px;
+}
+
+.category-header {
+    background: #060CE9;
+    color: #FFD700;
+    font-size: 1rem;
+    font-weight: bold;
+    text-align: center;
+    padding: 1rem 0.5rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    border: 2px solid #1a1aff;
+    min-height: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.cell {
+    background: #060CE9;
+    border: 2px solid #1a1aff;
+    color: #FFD700;
+    font-size: 1.8rem;
+    font-weight: bold;
+    text-align: center;
+    padding: 1.5rem 0.5rem;
+    cursor: pointer;
+    transition: background 0.15s, transform 0.1s;
+    min-height: 80px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+}
+
+.cell:hover {
+    background: #0a10ff;
+    transform: scale(1.02);
+}
+
+.cell.answered {
+    background: #030570;
+    border-color: #030570;
+    cursor: default;
+}
+
+.cell.answered:hover {
+    transform: none;
+}
+
+.cell.empty {
+    background: transparent;
+    border-color: transparent;
+    cursor: default;
+}
+
+.no-data {
+    text-align: center;
+    font-size: 1.5rem;
+    opacity: 0.5;
+}
+
+/* Overlay (Clue Display) */
+.overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(6, 12, 233, 0.97);
+    z-index: 100;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.overlay.hidden {
+    display: none;
+}
+
+.overlay-content {
+    text-align: center;
+    max-width: 900px;
+    padding: 2rem;
+    width: 100%;
+}
+
+.clue-header {
+    font-size: 1.2rem;
+    color: #FFD700;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    margin-bottom: 2rem;
+    display: flex;
+    justify-content: center;
+    gap: 1.5rem;
+}
+
+.clue-text {
+    font-size: 2.2rem;
+    line-height: 1.4;
+    margin-bottom: 2rem;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.answer-text {
+    font-size: 1.5rem;
+    color: #90EE90;
+    margin-bottom: 2rem;
+    font-style: italic;
+    padding: 1rem;
+    background: rgba(0, 0, 0, 0.2);
+    border-radius: 8px;
+}
+
+.answer-text.hidden {
+    display: none;
+}
+
+/* Buzz Indicator */
+.buzz-indicator {
+    font-size: 1.8rem;
+    font-weight: bold;
+    color: #FFD700;
+    margin-bottom: 2rem;
+    animation: pulse 0.5s ease-in-out;
+}
+
+.buzz-indicator.hidden {
+    display: none;
+}
+
+#buzz-team-name {
+    color: #00ff00;
+    font-size: 2rem;
+}
+
+/* Daily Double */
+.daily-double {
+    font-size: 3rem;
+    font-weight: bold;
+    color: #FFD700;
+    text-shadow: 3px 3px 6px rgba(0, 0, 0, 0.5);
+    animation: dailyDouble 0.8s ease-in-out;
+    margin-bottom: 1.5rem;
+}
+
+.daily-double.hidden {
+    display: none;
+}
+
+@keyframes dailyDouble {
+    0% { transform: scale(0.3); opacity: 0; }
+    50% { transform: scale(1.2); }
+    100% { transform: scale(1); opacity: 1; }
+}
+
+/* Host Controls */
+.host-controls {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin-top: 1.5rem;
+}
+
+.btn {
+    padding: 0.75rem 2rem;
+    font-size: 1.1rem;
+    font-weight: bold;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    transition: transform 0.1s, opacity 0.15s;
+}
+
+.btn:hover {
+    transform: translateY(-1px);
+}
+
+.btn:active {
+    transform: translateY(1px);
+}
+
+.btn.hidden {
+    display: none;
+}
+
+.btn-correct {
+    background: #28a745;
+    color: #fff;
+}
+
+.btn-incorrect {
+    background: #dc3545;
+    color: #fff;
+}
+
+.btn-skip {
+    background: #6c757d;
+    color: #fff;
+}
+
+.btn-info {
+    background: #FFD700;
+    color: #060CE9;
+}
+
+.btn-final {
+    background: #FFD700;
+    color: #060CE9;
+    font-size: 1.2rem;
+    padding: 0.75rem 2rem;
+}
+
+.btn-refresh {
+    background: #6c757d;
+    color: #fff;
+    font-size: 1rem;
+    padding: 0.75rem 1.5rem;
+}
+
+.btn-refresh:hover {
+    background: #5a6268;
+}
+
+/* Bottom Controls */
+#bottom-controls {
+    padding: 1rem;
+    text-align: center;
+    background: rgba(0, 0, 0, 0.2);
+}
+
+/* Final Jeopardy Results */
+.final-results-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    justify-content: center;
+    margin-top: 1.5rem;
+}
+
+.final-result-card {
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 8px;
+    padding: 1.5rem;
+    min-width: 200px;
+    text-align: center;
+}
+
+.final-team-name {
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: #FFD700;
+    margin-bottom: 0.5rem;
+}
+
+.final-team-answer {
+    font-size: 1rem;
+    margin-bottom: 0.25rem;
+}
+
+.final-team-wager {
+    font-size: 0.9rem;
+    opacity: 0.8;
+    margin-bottom: 0.25rem;
+}
+
+.final-team-score {
+    font-size: 1.1rem;
+    font-weight: bold;
+    margin-bottom: 0.75rem;
+}
+
+.final-judge-btns {
+    display: flex;
+    gap: 0.5rem;
+    justify-content: center;
+}
+
+.final-judge-btns .btn {
+    padding: 0.5rem 1rem;
+    font-size: 0.9rem;
+}
+
+/* Game Over */
+.game-over {
+    text-align: center;
+    padding: 3rem;
+}
+
+.game-over h1 {
+    font-size: 4rem;
+    color: #FFD700;
+    text-shadow: 3px 3px 6px rgba(0, 0, 0, 0.5);
+}
+
+/* Animations */
+@keyframes pulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+    100% { transform: scale(1); }
+}

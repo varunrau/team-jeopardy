@@ -1,0 +1,267 @@
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+    font-family: 'Helvetica Neue', Arial, sans-serif;
+    background: #1a1a2e;
+    color: #fff;
+    min-height: 100vh;
+    overflow: hidden;
+    user-select: none;
+    -webkit-user-select: none;
+    touch-action: manipulation;
+}
+
+#app {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    height: 100dvh;
+}
+
+/* Header */
+#header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem 1.5rem;
+    background: rgba(0, 0, 0, 0.3);
+}
+
+#team-name {
+    font-size: 1.3rem;
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+#team-score {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: #FFD700;
+}
+
+/* Status Bar */
+#status-bar {
+    text-align: center;
+    padding: 0.75rem;
+    background: rgba(255, 255, 255, 0.05);
+    font-size: 1rem;
+    min-height: 2.5rem;
+}
+
+#status-text {
+    font-weight: 600;
+}
+
+/* Clue Display */
+#clue-display {
+    padding: 1rem 1.5rem;
+    background: rgba(6, 12, 233, 0.3);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+#clue-display.hidden {
+    display: none;
+}
+
+#clue-category-value {
+    font-size: 0.85rem;
+    color: #FFD700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    margin-bottom: 0.5rem;
+}
+
+#clue-text {
+    font-size: 1.1rem;
+    line-height: 1.5;
+}
+
+/* Buzz Button Container */
+#buzz-container {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem;
+}
+
+#buzz-container.hidden {
+    display: none;
+}
+
+#buzz-button {
+    width: 220px;
+    height: 220px;
+    border-radius: 50%;
+    border: 6px solid #333;
+    font-size: 2rem;
+    font-weight: 900;
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    cursor: pointer;
+    transition: all 0.15s ease;
+    position: relative;
+    outline: none;
+    -webkit-tap-highlight-color: transparent;
+
+    /* Default (disabled) state */
+    background: radial-gradient(circle at 40% 40%, #555, #333);
+    color: #888;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+}
+
+#buzz-button:disabled {
+    cursor: default;
+}
+
+/* Active state - ready to buzz */
+#buzz-button.active {
+    background: radial-gradient(circle at 40% 40%, #ff4444, #cc0000);
+    color: #fff;
+    border-color: #ff6666;
+    box-shadow:
+        0 0 30px rgba(255, 0, 0, 0.4),
+        0 0 60px rgba(255, 0, 0, 0.2),
+        inset 0 -4px 8px rgba(0, 0, 0, 0.3);
+    animation: buzzPulse 1s ease-in-out infinite;
+}
+
+#buzz-button.active:active {
+    transform: scale(0.95);
+    box-shadow:
+        0 0 15px rgba(255, 0, 0, 0.3),
+        inset 0 2px 8px rgba(0, 0, 0, 0.4);
+}
+
+/* Buzzed state - team has buzzed */
+#buzz-button.buzzed {
+    background: radial-gradient(circle at 40% 40%, #FFD700, #cc9900);
+    color: #1a1a2e;
+    border-color: #FFD700;
+    box-shadow: 0 0 40px rgba(255, 215, 0, 0.5);
+    animation: none;
+}
+
+/* Locked state - another team buzzed */
+#buzz-button.locked {
+    background: radial-gradient(circle at 40% 40%, #444, #222);
+    color: #666;
+    border-color: #333;
+    box-shadow: none;
+    animation: none;
+}
+
+@keyframes buzzPulse {
+    0% { box-shadow: 0 0 30px rgba(255, 0, 0, 0.4), 0 0 60px rgba(255, 0, 0, 0.2); }
+    50% { box-shadow: 0 0 50px rgba(255, 0, 0, 0.6), 0 0 100px rgba(255, 0, 0, 0.3); }
+    100% { box-shadow: 0 0 30px rgba(255, 0, 0, 0.4), 0 0 60px rgba(255, 0, 0, 0.2); }
+}
+
+/* Final Jeopardy Panel */
+#final-panel {
+    padding: 1.5rem;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto;
+}
+
+#final-panel.hidden {
+    display: none;
+}
+
+#final-panel h2 {
+    text-align: center;
+    font-size: 1.5rem;
+    color: #FFD700;
+    margin-bottom: 1rem;
+}
+
+#final-category {
+    text-align: center;
+    font-size: 1rem;
+    color: #FFD700;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    margin-bottom: 0.75rem;
+}
+
+#final-clue {
+    text-align: center;
+    font-size: 1.2rem;
+    line-height: 1.5;
+    margin-bottom: 1.5rem;
+    padding: 1rem;
+    background: rgba(6, 12, 233, 0.3);
+    border-radius: 8px;
+}
+
+.final-form {
+    margin-bottom: 1rem;
+}
+
+.final-form.hidden {
+    display: none;
+}
+
+.final-form label {
+    display: block;
+    font-size: 0.9rem;
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: 0.5rem;
+    color: #FFD700;
+}
+
+.final-form input {
+    width: 100%;
+    padding: 0.75rem 1rem;
+    font-size: 1.2rem;
+    border: 2px solid #FFD700;
+    border-radius: 6px;
+    background: rgba(255, 255, 255, 0.1);
+    color: #fff;
+    outline: none;
+    margin-bottom: 0.75rem;
+}
+
+.final-form input::placeholder {
+    color: rgba(255, 255, 255, 0.4);
+}
+
+.final-form input:focus {
+    background: rgba(255, 255, 255, 0.15);
+}
+
+.final-form input:disabled {
+    opacity: 0.5;
+}
+
+.final-form button {
+    width: 100%;
+    padding: 0.75rem;
+    font-size: 1.1rem;
+    font-weight: bold;
+    background: #FFD700;
+    color: #1a1a2e;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    text-transform: uppercase;
+}
+
+.final-form button:hover {
+    background: #FFC800;
+}
+
+.final-form button:disabled {
+    opacity: 0.5;
+    cursor: default;
+}
+
+/* Utility */
+.hidden {
+    display: none !important;
+}

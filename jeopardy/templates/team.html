@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>Jeopardy - {{ team.name }}</title>
+    <link rel="stylesheet" href="/static/css/buzzer.css">
+</head>
+<body>
+    <div id="app">
+        <!-- Header -->
+        <div id="header">
+            <div id="team-name">{{ team.name }}</div>
+            <div id="team-score">$<span id="score-value">{{ team.score }}</span></div>
+        </div>
+
+        <!-- Status -->
+        <div id="status-bar">
+            <span id="status-text">Waiting for game to start...</span>
+        </div>
+
+        <!-- Clue Display -->
+        <div id="clue-display" class="hidden">
+            <div id="clue-category-value"></div>
+            <div id="clue-text"></div>
+        </div>
+
+        <!-- Buzz Button -->
+        <div id="buzz-container">
+            <button id="buzz-button" disabled>BUZZ</button>
+        </div>
+
+        <!-- Final Jeopardy Panel -->
+        <div id="final-panel" class="hidden">
+            <h2>Final Jeopardy</h2>
+            <div id="final-category"></div>
+            <div id="final-clue"></div>
+            <div class="final-form">
+                <label for="wager-input">Your Wager ($)</label>
+                <input type="number" id="wager-input" min="0" placeholder="0">
+                <button id="wager-btn" onclick="submitWager()">Submit Wager</button>
+            </div>
+            <div class="final-form hidden" id="answer-form">
+                <label for="answer-input">Your Answer</label>
+                <input type="text" id="answer-input" placeholder="What is...">
+                <button id="answer-btn" onclick="submitAnswer()">Submit Answer</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const gameId = "{{ game_id }}";
+        const teamToken = "{{ team_token }}";
+        const teamId = "{{ team.team_id }}";
+    </script>
+    <script type="module" src="/static/js/buzzer.js"></script>
+</body>
+</html>

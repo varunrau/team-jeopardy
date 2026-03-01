@@ -1,0 +1,17 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(pip3 list:*)",
+      "WebSearch",
+      "WebFetch(domain:github.com)",
+      "WebFetch(domain:pypi.org)",
+      "Bash(pip install:*)",
+      "Bash(python3:*)",
+      "Bash(uv:*)",
+      "Bash(source:*)",
+      "WebFetch(domain:developers.notion.com)",
+      "Bash(npm:*)",
+      "Bash(npx tsc:*)"
+    ]
+  }
+}
