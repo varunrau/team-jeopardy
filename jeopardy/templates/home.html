@@ -8,7 +8,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
+        * { margin: 0; padding: 0; box-sizing: border-box; text-wrap: pretty; }
         body {
             font-family: 'Space Grotesk', sans-serif;
             font-size: 1rem;
@@ -33,18 +33,18 @@
             margin-bottom: 3rem;
         }
         #create-btn {
-            padding: 1rem 3rem;
+            padding: 8px 20px;
             font-size: 1rem;
             font-weight: 700;
             background: #FFD700;
             color: #060CE9;
             border: none;
-            border-radius: 8px;
+            border-radius: 100px;
             cursor: pointer;
-            transition: transform 0.15s;
+            transition: opacity 0.15s;
         }
         #create-btn:hover {
-            transform: translateY(-2px);
+            opacity: 0.85;
         }
         #create-btn:disabled {
             opacity: 0.5;
@@ -60,7 +60,6 @@
 </head>
 <body>
     <h1>Jeopardy!</h1>
-    <p class="subtitle">Real-time multiplayer trivia game</p>
     <button id="create-btn" onclick="createGame()">Create New Game</button>
     <p class="status" id="status"></p>
 

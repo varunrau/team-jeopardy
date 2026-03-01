@@ -21,7 +21,7 @@ function connect() {
     ws = new WebSocket(`${protocol}//${location.host}/ws/host/${gameId}`);
     ws.onopen = () => {
         console.log("Host WebSocket connected");
-        // Server sends sync events on connect, no need for REST fetch
+        fetchBoardState();
     };
     ws.onmessage = (event) => {
         const data = JSON.parse(event.data);
@@ -249,7 +249,8 @@ function renderBoard() {
             const clue = boardData[cat].find((c) => c.dollar_value === value);
             if (clue) {
                 if (clue.is_answered) {
-                    html += `<div class="cell answered"></div>`;
+                    const label = clue.answered_by || "";
+                    html += `<div class="cell answered">${label}</div>`;
                 }
                 else {
                     html += `<div class="cell" onclick="selectClue('${clue.id}')">$${clue.dollar_value}</div>`;
@@ -283,12 +284,17 @@ function renderScoreboard() {
     el.innerHTML = html;
 }
 // --- Clue overlay ---
+function showControls(which) {
+    $("bottom-controls").classList.toggle("hidden", which !== "board");
+    $("clue-controls").classList.toggle("hidden", which !== "clue");
+    $("final-controls").classList.toggle("hidden", which !== "final");
+}
 function showClueOverlay(data) {
     $("clue-category").textContent = data.category;
     $("clue-value").textContent = "$" + data.dollar_value;
     const clueEl = $("clue-text");
     if (data.clue_image_url) {
-        clueEl.innerHTML = `<img src="${data.clue_image_url}" alt="Clue" style="max-width:100%;max-height:60vh;border-radius:8px;">`;
+        clueEl.innerHTML = `<img src="${data.clue_image_url}" alt="Clue" style="width:100%;max-height:60vh;object-fit:contain;border-radius:8px;">`;
         if (data.clue_text) {
             clueEl.innerHTML += `<p style="margin-top:1rem;">${data.clue_text}</p>`;
         }
@@ -304,6 +310,7 @@ function showClueOverlay(data) {
     show("btn-reveal");
     show("btn-skip");
     show("clue-overlay");
+    showControls("clue");
     if (data.is_daily_double) {
         show("daily-double-indicator");
     }
@@ -315,6 +322,7 @@ function hideClueOverlay() {
     hide("clue-overlay");
     currentClueId = null;
     currentAnswer = null;
+    showControls("board");
 }
 function showBuzzWinner(data) {
     $("buzz-team-name").textContent = data.team_name;
@@ -349,7 +357,7 @@ function showFinalJeopardy(data) {
     $("final-clue-text").textContent = data.clue_text;
     show("final-overlay");
     hide("board");
-    hide("bottom-controls");
+    showControls("final");
 }
 function showFinalResults(results) {
     const el = $("final-results");
@@ -381,8 +389,75 @@ function handleStatusChange(status) {
         hide("clue-overlay");
         $("board").innerHTML =
             '<div class="game-over"><h1>Game Over!</h1></div>';
-        hide("bottom-controls");
+        showControls("none");
     }
+}
+async function loadTeamsList() {
+    const list = $("teams-modal-list");
+    list.innerHTML = "<p>Loading...</p>";
+    try {
+        const resp = await fetch(`/api/games/${gameId}/teams/qr`);
+        if (!resp.ok) {
+            list.innerHTML = "<p>Failed to load teams</p>";
+            return;
+        }
+        const teams = await resp.json();
+        let html = "";
+        if (teams.length > 0) {
+            html += '<div class="teams-qr-grid">';
+            for (const t of teams) {
+                html += `<div class="team-qr-card">
+          <img src="${t.qr}" alt="QR for ${t.name}">
+          <div class="team-qr-name">${t.name}</div>
+          <div class="team-qr-url">${t.url}</div>
+        </div>`;
+            }
+            html += "</div>";
+        }
+        else {
+            html += "<p>No teams yet</p>";
+        }
+        html += `<div class="add-team-row">
+      <input type="text" id="add-team-input" placeholder="Team name..." maxlength="30">
+      <button class="btn btn-info" onclick="addTeam()">Add team</button>
+    </div>`;
+        list.innerHTML = html;
+    }
+    catch {
+        list.innerHTML = "<p>Failed to load teams</p>";
+    }
+}
+async function showTeamsModal() {
+    show("teams-modal");
+    await loadTeamsList();
+}
+async function addTeam() {
+    const input = $("add-team-input");
+    const name = input.value.trim();
+    if (!name)
+        return;
+    input.disabled = true;
+    try {
+        const resp = await fetch(`/api/games/${gameId}/teams`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ name }),
+        });
+        if (!resp.ok) {
+            const err = await resp.json();
+            console.error("Add team error:", err.detail);
+            input.disabled = false;
+            return;
+        }
+        await loadTeamsList();
+    }
+    catch (e) {
+        console.error("Failed to add team:", e);
+        input.disabled = false;
+    }
+}
+function closeTeamsModal() {
+    hide("teams-modal");
 }
 // --- Expose to global scope for onclick handlers in HTML ---
 const w = window;
@@ -395,6 +470,9 @@ w.startFinalJeopardy = startFinalJeopardy;
 w.revealFinalAnswers = revealFinalAnswers;
 w.judgeFinal = judgeFinal;
 w.finishGame = finishGame;
+w.showTeamsModal = showTeamsModal;
+w.closeTeamsModal = closeTeamsModal;
+w.addTeam = addTeam;
 // Start connection
 connect();
 export {};

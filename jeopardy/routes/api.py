@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends, HTTPException, Request
 from pydantic import BaseModel
 
 from jeopardy.dependencies import get_buzzer, get_game_manager, get_scoring
@@ -139,6 +139,32 @@ async def list_teams(game_id: str, gm: GameManager = Depends(get_game_manager)):
         {"team_id": t.team_id, "name": t.name, "score": t.score}
         for t in game.teams.values()
     ]
+
+
+@router.get("/games/{game_id}/teams/qr")
+async def get_team_qr_codes(
+    game_id: str,
+    request: Request,
+    gm: GameManager = Depends(get_game_manager),
+):
+    """Return team join URLs and QR code data URIs."""
+    from jeopardy.routes.views import _generate_qr_data_uri
+
+    game = gm.get_game(game_id)
+    if not game:
+        raise HTTPException(status_code=404, detail="Game not found")
+
+    base_url = str(request.base_url).rstrip("/")
+    teams = []
+    for team in game.teams.values():
+        url = f"{base_url}/play/{game_id}/{team.team_token}"
+        teams.append({
+            "team_id": team.team_id,
+            "name": team.name,
+            "url": url,
+            "qr": _generate_qr_data_uri(url),
+        })
+    return teams
 
 
 @router.post("/games/{game_id}/refetch")
@@ -284,7 +310,7 @@ async def judge_answer(
             ScoreUpdate(scores=gm.get_scores(game), team_names=gm.get_team_names(game)),
         )
 
-        gm.mark_clue_answered(game_id)
+        gm.mark_clue_answered(game_id, team_id=team_id)
 
         await ws_manager.broadcast_to_host(
             game_id,

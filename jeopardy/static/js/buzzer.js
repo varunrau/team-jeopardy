@@ -21,7 +21,7 @@ function connect() {
     ws = new WebSocket(`${protocol}//${location.host}/ws/team/${gameId}/${teamToken}`);
     ws.onopen = () => {
         console.log("Team WebSocket connected");
-        // Status will be set by sync events from server
+        setStatus("Connected. Waiting for game...");
     };
     ws.onmessage = (event) => {
         const data = JSON.parse(event.data);
@@ -43,15 +43,18 @@ function handleMessage(data) {
             enableBuzz();
             break;
         case "BUZZ_LOCKED":
-            disableBuzz();
             if (hasBuzzed) {
+                disableBuzz();
                 setStatus("You buzzed in!");
             }
             else {
+                navigator.vibrate?.([100, 50, 100]);
+                disableBuzz(data.team_name);
                 setStatus(data.team_name + " buzzed in!");
             }
             break;
         case "BUZZ_TIMEOUT":
+            navigator.vibrate?.([100, 50, 100]);
             disableBuzz();
             setStatus("Time's up!");
             break;
@@ -88,17 +91,21 @@ function enableBuzz() {
     hasBuzzed = false;
     const btn = $("buzz-button");
     btn.disabled = false;
+    btn.textContent = "BUZZ";
     btn.classList.add("active");
     btn.classList.remove("buzzed", "locked");
     setStatus("BUZZ NOW!");
 }
-function disableBuzz() {
+function disableBuzz(lockedByTeam) {
     buzzEnabled = false;
     const btn = $("buzz-button");
     btn.disabled = true;
     btn.classList.remove("active");
     if (!hasBuzzed) {
         btn.classList.add("locked");
+        if (lockedByTeam) {
+            btn.textContent = lockedByTeam + " buzzed first";
+        }
     }
 }
 function doBuzz() {
@@ -110,25 +117,14 @@ function doBuzz() {
     btn.disabled = true;
     btn.classList.remove("active");
     btn.classList.add("buzzed");
+    navigator.vibrate?.(200);
     const msg = { type: "BUZZ" };
     ws.send(JSON.stringify(msg));
     setStatus("You buzzed in!");
 }
 // --- Clue display ---
 function showClue(data) {
-    $("clue-category-value").textContent =
-        data.category + " - $" + data.dollar_value;
-    const clueEl = $("clue-text");
-    if (data.clue_image_url) {
-        clueEl.innerHTML = `<img src="${data.clue_image_url}" alt="Clue" style="max-width:100%;max-height:40vh;border-radius:8px;">`;
-        if (data.clue_text) {
-            clueEl.innerHTML += `<p style="margin-top:0.5rem;">${data.clue_text}</p>`;
-        }
-    }
-    else {
-        clueEl.textContent = data.clue_text;
-    }
-    show("clue-display");
+    hide("clue-display");
     hide("final-panel");
 }
 function hideClue() {
@@ -168,35 +164,13 @@ function handleStatusChange(status) {
     }
 }
 // --- Final Jeopardy ---
-async function showFinalJeopardy(data) {
+function showFinalJeopardy(data) {
     hideClue();
     disableBuzz();
     hide("buzz-container");
     $("final-category").textContent = data.category;
     $("final-clue").textContent = data.clue_text;
     show("final-panel");
-    // Restore FJ form state on reconnect
-    try {
-        const resp = await fetch(`/api/games/${gameId}/team-state/${teamToken}`);
-        if (resp.ok) {
-            const state = await resp.json();
-            if (state.final_wager !== null) {
-                $("wager-input").value = state.final_wager;
-                $("wager-input").disabled = true;
-                $("wager-btn").disabled = true;
-                show("answer-form");
-                if (state.has_final_answer) {
-                    $("answer-input").disabled = true;
-                    $("answer-btn").disabled = true;
-                    setStatus("Answer submitted! Waiting for results...");
-                } else {
-                    setStatus("Wager submitted! Enter your answer.");
-                }
-            }
-        }
-    } catch (e) {
-        console.error("Failed to check team state:", e);
-    }
 }
 async function submitWager() {
     const input = $("wager-input");

@@ -5,7 +5,7 @@
    --display: 2.5rem / 700
 */
 
-* { margin: 0; padding: 0; box-sizing: border-box; }
+* { margin: 0; padding: 0; box-sizing: border-box; text-wrap: pretty; }
 
 body {
     font-family: 'Space Grotesk', sans-serif;
@@ -25,6 +25,7 @@ button, input, select, textarea {
     display: flex;
     flex-direction: column;
     min-height: 100vh;
+    padding-bottom: 70px;
 }
 
 /* Scoreboard */
@@ -71,15 +72,15 @@ button, input, select, textarea {
     display: grid;
     gap: 6px;
     width: 100%;
-    max-width: 1200px;
 }
 
 .category-header {
     background: #060CE9;
     color: #FFD700;
-    font-size: 1rem;
+    font-size: 1.5rem;
     font-weight: 700;
     text-align: center;
+    text-transform: uppercase;
     padding: 1rem 0.5rem;
     border: 2px solid #1a1aff;
     min-height: 60px;
@@ -113,6 +114,9 @@ button, input, select, textarea {
     background: #030570;
     border-color: #030570;
     cursor: default;
+    font-size: 1rem;
+    font-weight: 400;
+    color: rgba(255, 255, 255, 0.4);
 }
 
 .cell.answered:hover {
@@ -137,12 +141,14 @@ button, input, select, textarea {
     top: 0;
     left: 0;
     width: 100vw;
-    height: 100vh;
+    bottom: 70px;
     background: rgba(6, 12, 233, 0.97);
     z-index: 100;
     display: flex;
-    align-items: center;
+    align-items: flex-start;
     justify-content: center;
+    padding-top: 48px;
+    overflow-y: auto;
 }
 
 .overlay.hidden {
@@ -167,7 +173,7 @@ button, input, select, textarea {
 }
 
 .clue-text {
-    font-size: 2.5rem;
+    font-size: 1.5rem;
     font-weight: 700;
     line-height: 1.4;
     margin-bottom: 2rem;
@@ -176,9 +182,8 @@ button, input, select, textarea {
 .answer-text {
     font-size: 1.5rem;
     font-weight: 700;
-    color: #90EE90;
+    color: #00ff00;
     margin-bottom: 2rem;
-    font-style: italic;
     padding: 1rem;
     background: rgba(0, 0, 0, 0.2);
     border-radius: 8px;
@@ -190,6 +195,10 @@ button, input, select, textarea {
 
 /* Buzz Indicator */
 .buzz-indicator {
+    width: 100%;
+    padding: 16px;
+    border-radius: 20px;
+    background: rgba(0, 0, 0, 0.08);
     font-size: 1.5rem;
     font-weight: 700;
     color: #FFD700;
@@ -234,21 +243,17 @@ button, input, select, textarea {
 }
 
 .btn {
-    padding: 0.75rem 2rem;
+    padding: 8px 20px;
     font-size: 1rem;
     font-weight: 700;
     border: none;
-    border-radius: 6px;
+    border-radius: 100px;
     cursor: pointer;
-    transition: transform 0.1s, opacity 0.15s;
+    transition: opacity 0.15s;
 }
 
 .btn:hover {
-    transform: translateY(-1px);
-}
-
-.btn:active {
-    transform: translateY(1px);
+    opacity: 0.85;
 }
 
 .btn.hidden {
@@ -256,7 +261,7 @@ button, input, select, textarea {
 }
 
 .btn-correct {
-    background: #28a745;
+    background: #00ff00;
     color: #fff;
 }
 
@@ -289,14 +294,34 @@ button, input, select, textarea {
     background: #5a6268;
 }
 
-/* Bottom Controls */
-#bottom-controls {
+/* Fixed Bottom Bar */
+#bottom-bar {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 200;
+    background: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
     padding: 1rem;
-    text-align: center;
-    background: rgba(0, 0, 0, 0.2);
     display: flex;
     justify-content: center;
     gap: 1rem;
+}
+
+#bottom-controls,
+#clue-controls,
+#final-controls {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+}
+
+#bottom-controls.hidden,
+#clue-controls.hidden,
+#final-controls.hidden {
+    display: none;
 }
 
 /* Final Jeopardy Results */
@@ -347,7 +372,6 @@ button, input, select, textarea {
 }
 
 .final-judge-btns .btn {
-    padding: 0.5rem 1rem;
 }
 
 /* Game Over */
@@ -367,4 +391,69 @@ button, input, select, textarea {
     0% { transform: scale(1); }
     50% { transform: scale(1.05); }
     100% { transform: scale(1); }
+}
+
+/* Teams QR Modal */
+.teams-qr-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1.5rem;
+    justify-content: center;
+}
+
+.team-qr-card {
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 8px;
+    padding: 1.5rem;
+    text-align: center;
+    min-width: 180px;
+}
+
+.team-qr-card img {
+    width: 150px;
+    height: 150px;
+    border-radius: 4px;
+    margin-bottom: 0.75rem;
+}
+
+.team-qr-name {
+    font-size: 1rem;
+    font-weight: 700;
+    margin-bottom: 0.25rem;
+}
+
+.team-qr-url {
+    font-size: 1rem;
+    opacity: 0.5;
+    word-break: break-all;
+}
+
+.add-team-row {
+    display: flex;
+    gap: 0.5rem;
+    justify-content: center;
+    margin-top: 1.5rem;
+}
+
+.add-team-row input {
+    padding: 8px 12px;
+    font-size: 1rem;
+    border: 2px solid #FFD700;
+    border-radius: 100px;
+    background: rgba(255, 255, 255, 0.1);
+    color: #fff;
+    outline: none;
+    width: 200px;
+}
+
+.add-team-row input::placeholder {
+    color: rgba(255, 255, 255, 0.4);
+}
+
+.add-team-row input:focus {
+    background: rgba(255, 255, 255, 0.15);
+}
+
+.add-team-row input:disabled {
+    opacity: 0.5;
 }

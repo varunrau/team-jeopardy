@@ -6,6 +6,7 @@ export interface BoardClue {
   is_answered: boolean;
   is_daily_double: boolean;
   category: string;
+  answered_by: string | null;
   answer?: string;
   clue_text?: string;
 }

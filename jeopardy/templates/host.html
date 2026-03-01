@@ -32,12 +32,6 @@
                 <div id="daily-double-indicator" class="daily-double hidden">
                     DAILY DOUBLE!
                 </div>
-                <div class="host-controls">
-                    <button id="btn-reveal" class="btn btn-info" onclick="revealAnswer()">Reveal Answer</button>
-                    <button id="btn-correct" class="btn btn-correct hidden" onclick="judgeAnswer(true)">Correct</button>
-                    <button id="btn-incorrect" class="btn btn-incorrect hidden" onclick="judgeAnswer(false)">Incorrect</button>
-                    <button id="btn-skip" class="btn btn-skip" onclick="skipClue()">Skip / No Answer</button>
-                </div>
             </div>
         </div>
 
@@ -49,17 +43,40 @@
                 <div id="final-clue-text" class="clue-text"></div>
                 <div id="final-answer-text" class="answer-text hidden"></div>
                 <div id="final-results"></div>
-                <div class="host-controls">
-                    <button class="btn btn-info" onclick="revealFinalAnswers()">Reveal Answers</button>
-                    <button class="btn btn-correct" onclick="finishGame()">Finish Game</button>
+            </div>
+        </div>
+
+        <!-- Teams Modal -->
+        <div id="teams-modal" class="overlay hidden">
+            <div class="overlay-content">
+                <h2 style="margin-bottom:1.5rem;">Teams</h2>
+                <div id="teams-modal-list"></div>
+                <div class="host-controls" style="margin-top:1.5rem;">
+                    <button class="btn btn-info" onclick="closeTeamsModal()">Close</button>
                 </div>
             </div>
         </div>
 
-        <!-- Bottom Controls -->
-        <div id="bottom-controls">
-            <button class="btn btn-refresh" onclick="refetchClues()">Refetch from Notion</button>
-            <button class="btn btn-final" onclick="startFinalJeopardy()">Final Jeopardy</button>
+        <!-- Fixed bottom bar — always visible -->
+        <div id="bottom-bar">
+            <!-- Default controls (board view) -->
+            <div id="bottom-controls">
+                <button class="btn btn-skip" onclick="showTeamsModal()">See teams</button>
+                <button class="btn btn-refresh" onclick="refetchClues()">Refetch from Notion</button>
+                <button class="btn btn-final" onclick="startFinalJeopardy()">Final Jeopardy</button>
+            </div>
+            <!-- Clue controls (shown when a clue is active) -->
+            <div id="clue-controls" class="hidden">
+                <button id="btn-reveal" class="btn btn-info" onclick="revealAnswer()">Reveal</button>
+                <button id="btn-correct" class="btn btn-correct hidden" onclick="judgeAnswer(true)">Correct</button>
+                <button id="btn-incorrect" class="btn btn-incorrect hidden" onclick="judgeAnswer(false)">Incorrect</button>
+                <button id="btn-skip" class="btn btn-skip" onclick="skipClue()">No answer</button>
+            </div>
+            <!-- Final Jeopardy controls -->
+            <div id="final-controls" class="hidden">
+                <button class="btn btn-info" onclick="revealFinalAnswers()">Reveal answers</button>
+                <button class="btn btn-correct" onclick="finishGame()">Finish game</button>
+            </div>
         </div>
     </div>
 

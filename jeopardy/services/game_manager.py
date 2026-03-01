@@ -49,8 +49,6 @@ class GameManager:
         game = self._require_game(game_id)
         if len(game.teams) >= settings.max_teams:
             raise ValueError("Maximum number of teams reached")
-        if game.status != GameStatus.LOBBY:
-            raise ValueError("Cannot add teams after game has started")
         team = Team(name=name)
         game.teams[team.team_id] = team
         return team
@@ -79,13 +77,14 @@ class GameManager:
                     return clue
         raise ValueError("Clue not found or already answered")
 
-    def mark_clue_answered(self, game_id: str) -> None:
+    def mark_clue_answered(self, game_id: str, team_id: str | None = None) -> None:
         game = self._require_game(game_id)
         if game.current_clue:
             for clues in game.board.values():
                 for c in clues:
                     if c.id == game.current_clue.id:
                         c.is_answered = True
+                        c.answered_by_team_id = team_id
             game.current_clue = None
             game.buzz_window_open = False
             game.buzz_order = []
@@ -167,12 +166,16 @@ class GameManager:
         for category, clues in game.board.items():
             board_data[category] = []
             for clue in clues:
+                answered_by_name = None
+                if clue.answered_by_team_id and clue.answered_by_team_id in game.teams:
+                    answered_by_name = game.teams[clue.answered_by_team_id].name
                 entry: dict = {
                     "id": clue.id,
                     "dollar_value": clue.dollar_value,
                     "is_answered": clue.is_answered,
                     "is_daily_double": clue.is_daily_double,
                     "category": clue.category,
+                    "answered_by": answered_by_name,
                 }
                 if include_answers:
                     entry["answer"] = clue.answer

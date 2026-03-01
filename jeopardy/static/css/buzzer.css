@@ -5,7 +5,7 @@
    --display: 2.5rem / 700
 */
 
-* { margin: 0; padding: 0; box-sizing: border-box; }
+* { margin: 0; padding: 0; box-sizing: border-box; text-wrap: pretty; }
 
 body {
     font-family: 'Space Grotesk', sans-serif;
@@ -114,7 +114,7 @@ button, input, select, textarea {
     -webkit-tap-highlight-color: transparent;
 
     /* Default (disabled) state */
-    background: radial-gradient(circle at 40% 40%, #555, #333);
+    background: #444;
     color: #888;
 }
 
@@ -124,9 +124,9 @@ button, input, select, textarea {
 
 /* Active state - ready to buzz */
 #buzz-button.active {
-    background: radial-gradient(circle at 40% 40%, #ff4444, #cc0000);
+    background: #00ff00;
     color: #fff;
-    border-color: #ff6666;
+    border-color: #00ff00;
     animation: buzzPulse 1s ease-in-out infinite;
 }
 
@@ -136,7 +136,7 @@ button, input, select, textarea {
 
 /* Buzzed state - team has buzzed */
 #buzz-button.buzzed {
-    background: radial-gradient(circle at 40% 40%, #FFD700, #cc9900);
+    background: #FFD700;
     color: #1a1a2e;
     border-color: #FFD700;
     animation: none;
@@ -144,7 +144,7 @@ button, input, select, textarea {
 
 /* Locked state - another team buzzed */
 #buzz-button.locked {
-    background: radial-gradient(circle at 40% 40%, #444, #222);
+    background: #333;
     color: #666;
     border-color: #333;
     animation: none;
@@ -237,13 +237,13 @@ button, input, select, textarea {
 
 .final-form button {
     width: 100%;
-    padding: 0.75rem;
+    padding: 8px 20px;
     font-size: 1rem;
     font-weight: 700;
     background: #FFD700;
     color: #1a1a2e;
     border: none;
-    border-radius: 6px;
+    border-radius: 100px;
     cursor: pointer;
 }
 

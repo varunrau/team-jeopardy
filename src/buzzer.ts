@@ -74,15 +74,18 @@ function handleMessage(data: TeamEvent): void {
       break;
 
     case "BUZZ_LOCKED":
-      disableBuzz();
       if (hasBuzzed) {
+        disableBuzz();
         setStatus("You buzzed in!");
       } else {
+        navigator.vibrate?.([100, 50, 100]);
+        disableBuzz(data.team_name);
         setStatus(data.team_name + " buzzed in!");
       }
       break;
 
     case "BUZZ_TIMEOUT":
+      navigator.vibrate?.([100, 50, 100]);
       disableBuzz();
       setStatus("Time's up!");
       break;
@@ -128,18 +131,22 @@ function enableBuzz(): void {
   hasBuzzed = false;
   const btn = $("buzz-button") as HTMLButtonElement;
   btn.disabled = false;
+  btn.textContent = "BUZZ";
   btn.classList.add("active");
   btn.classList.remove("buzzed", "locked");
   setStatus("BUZZ NOW!");
 }
 
-function disableBuzz(): void {
+function disableBuzz(lockedByTeam?: string): void {
   buzzEnabled = false;
   const btn = $("buzz-button") as HTMLButtonElement;
   btn.disabled = true;
   btn.classList.remove("active");
   if (!hasBuzzed) {
     btn.classList.add("locked");
+    if (lockedByTeam) {
+      btn.textContent = lockedByTeam + " buzzed first";
+    }
   }
 }
 
@@ -153,6 +160,8 @@ function doBuzz(): void {
   btn.classList.remove("active");
   btn.classList.add("buzzed");
 
+  navigator.vibrate?.(200);
+
   const msg: BuzzIn = { type: "BUZZ" };
   ws!.send(JSON.stringify(msg));
   setStatus("You buzzed in!");
@@ -161,18 +170,7 @@ function doBuzz(): void {
 // --- Clue display ---
 
 function showClue(data: ClueSelected): void {
-  $("clue-category-value").textContent =
-    data.category + " - $" + data.dollar_value;
-  const clueEl = $("clue-text");
-  if (data.clue_image_url) {
-    clueEl.innerHTML = `<img src="${data.clue_image_url}" alt="Clue" style="max-width:100%;max-height:40vh;border-radius:8px;">`;
-    if (data.clue_text) {
-      clueEl.innerHTML += `<p style="margin-top:0.5rem;">${data.clue_text}</p>`;
-    }
-  } else {
-    clueEl.textContent = data.clue_text;
-  }
-  show("clue-display");
+  hide("clue-display");
   hide("final-panel");
 }
 

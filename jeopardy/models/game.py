@@ -21,6 +21,7 @@ class Clue(BaseModel):
     dollar_value: int
     is_daily_double: bool = False
     is_answered: bool = False
+    answered_by_team_id: Optional[str] = None
 
 
 class Team(BaseModel):
