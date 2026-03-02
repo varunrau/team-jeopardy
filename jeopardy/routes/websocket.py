@@ -40,10 +40,13 @@ class ConnectionManager:
             if ws in conns:
                 conns.remove(ws)
 
-    async def disconnect_team(self, game_id: str, team_id: str) -> None:
+    async def disconnect_team(self, game_id: str, team_id: str, ws: WebSocket | None = None) -> None:
         async with self._lock:
             teams = self.team_connections.get(game_id, {})
-            teams.pop(team_id, None)
+            # Only remove if the WebSocket matches (prevents stale handlers
+            # from removing a newer reconnected WebSocket)
+            if ws is None or teams.get(team_id) is ws:
+                teams.pop(team_id, None)
 
     async def broadcast_to_host(self, game_id: str, event: BaseModel) -> None:
         msg = event.model_dump_json()
@@ -58,14 +61,14 @@ class ConnectionManager:
 
     async def broadcast_to_teams(self, game_id: str, event: BaseModel) -> None:
         msg = event.model_dump_json()
-        dead: list[str] = []
+        dead: list[tuple[str, WebSocket]] = []
         for team_id, ws in self.team_connections.get(game_id, {}).items():
             try:
                 await ws.send_text(msg)
             except Exception:
-                dead.append(team_id)
-        for team_id in dead:
-            await self.disconnect_team(game_id, team_id)
+                dead.append((team_id, ws))
+        for team_id, ws in dead:
+            await self.disconnect_team(game_id, team_id, ws)
 
     async def send_to_team(self, game_id: str, team_id: str, event: BaseModel) -> None:
         ws = self.team_connections.get(game_id, {}).get(team_id)
@@ -73,7 +76,7 @@ class ConnectionManager:
             try:
                 await ws.send_text(event.model_dump_json())
             except Exception:
-                await self.disconnect_team(game_id, team_id)
+                await self.disconnect_team(game_id, team_id, ws)
 
     async def broadcast_to_all(self, game_id: str, event: BaseModel) -> None:
         await asyncio.gather(
@@ -163,4 +166,4 @@ async def team_websocket(websocket: WebSocket, game_id: str, team_token: str) ->
                         BuzzLocked(team_name=team_name),
                     )
     except WebSocketDisconnect:
-        await ws_manager.disconnect_team(game_id, team.team_id)
+        await ws_manager.disconnect_team(game_id, team.team_id, websocket)
